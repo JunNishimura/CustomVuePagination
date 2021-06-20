@@ -4,9 +4,9 @@
             <item v-for="(item, idx) in displayItems" :key="idx" :title="item" />
         </div>
         <div class="page-btns">
-            <page-button @changePage="changePage" v-for="(pNum, idx) in pageNumbers" 
-                :key="idx" 
-                :pageNumber="pNum"
+            <page-button @changePage="changePage" v-for="n in pageNum" 
+                :key="n" 
+                :pageNumber="n"
                 :curPage="curPage"
             />
         </div>
@@ -28,8 +28,12 @@ export default {
     },
     data() {
         return {
-            curPage: 2, // curPage starts from 1
+            curPage: 1, // curPage starts from 1
+            pageNum: 0, // number os pages
         }
+    },
+    created() {
+        this.calcPageNum();
     },
     computed: {
         displayItems() {
@@ -37,14 +41,13 @@ export default {
             const endIdx   = startIdx + this.itemNumPerPage;
             return this.items.slice(startIdx, endIdx);
         },
-        pageNumbers() {
-            const lastPageNum = Math.ceil(this.items.length / this.itemNumPerPage)
-            return Array.from({length: lastPageNum}, (_, i) => i+1); // [1, .. , N]
-        }
     },
     methods: {
         changePage(value) {
             this.curPage = value;
+        },
+        calcPageNum() {
+            this.pageNum =  Math.ceil(this.items.length / this.itemNumPerPage);
         }
     }
 }
